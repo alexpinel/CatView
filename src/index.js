@@ -47,11 +47,16 @@ const loadAndProcessCSV = async () => {
 
       const apiUrl = `https://helioviewer-api.ias.u-psud.fr/v2/takeScreenshot/?imageScale=2.4204409&layers=[SDO,AIA,AIA,335,1,100]&events=&eventLabels=true&scale=true&scaleType=earth&scaleX=0&scaleY=0&date=${formattedDate}&x1=-1000&x2=1000&y1=-1000&y2=1000&display=true&watermark=true&events=[CH,all,1]`;
 
-      data.push({ apiUrl, videoFilePath });
+      // Add dimming_id and generate dimming details URL
+      const dimmingId = row.dimming_id.replace('.', ''); // Remove decimals
+      const dimmingDetailsUrl = `https://www.sidc.be/solardemon/science/dimmings_details.php?science=1&dimming_id=${dimmingId}&delay=80&prefix=dimming_mask_&small=1&aid=0&graph=1`;
+
+      data.push({ apiUrl, videoFilePath, dimmingDetailsUrl });
     })
     .on('end', () => {
       imageUrls = data.map((item) => item.apiUrl);
       videoUrls = data.map((item) => item.videoFilePath);
+      dimmingDetailsUrls = data.map((item) => item.dimmingDetailsUrl);
       
       ipcMain.on('load-next-image', loadNextImage);
       loadNextImage();
@@ -73,7 +78,8 @@ const loadNextImage = () => {
   if (currentImageIndex < imageUrls.length) {
     const imageUrl = imageUrls[currentImageIndex];
     const videoUrl = videoUrls[currentImageIndex];
-    mainWindow.webContents.send('image-loaded', { imageUrl, videoUrl });
+    const dimmingDetailsUrl = dimmingDetailsUrls[currentImageIndex];
+    mainWindow.webContents.send('image-loaded', { imageUrl, videoUrl, dimmingDetailsUrl });
     currentImageIndex++;
   } else {
     // All images loaded, do something or reset for the next iteration
