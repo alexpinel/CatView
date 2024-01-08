@@ -16,6 +16,7 @@ const createWindow = () => {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      allowFileAccess: true, // Allow access to local files
     },
   });
 
@@ -39,7 +40,7 @@ const loadAndProcessCSV = async () => {
       const cmeDate = row.cme_date;
       const formattedDate = convertDatePicFormat(cmeDate);
       const formattedVidDate = convertDateVidFormat(cmeDate);
-      const videoFileName = `harp.hmi.Marmask_720s_${formattedVidDate}.0.1.01_TAI_31d@2h_mask.mp4`;
+      const videoFileName = `${formattedVidDate}.01.01.mov`;
 
       // Assume the videos are stored in the same directory as the CSV file
       const videoFilePath = path.join(__dirname, '..', 'SHARPS', videoFileName);
