@@ -4,15 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Electron App</title>
+  <link href="./output.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-  <div>  
-    <img id="resultImage" alt="Result Image">
-    <video id="videoPlayer" controls></video>
-    <img id="dimmingContainer"></img>
-  </div>
 
-  <button id="switch day"onclick="loadNextImage()">Load Next Image</button>
+<body class="flex flex-col items-center">
+  <div class="flex items-center mb-4">
+    <img id="resultImage" alt="Result Image" class="mr-4">
+    <video id="videoPlayer" controls class="mr-4"></video>
+    <img id="imgElement" class="mr-4"></img>
+  </div>
+  <button id="switch day" onclick="loadNextImage()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+    Load Next Image
+  </button>
 
   <script>
     function loadNextImage() {

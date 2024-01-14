@@ -5,7 +5,7 @@ window.onload = () => {
   ipcRenderer.on('image-loaded', (event, { imageUrl, videoUrl, dimmingDetailsUrl }) => {
     render(imageUrl);
     playVideo(videoUrl);
-    loadDimmingDetails(dimmingDetailsUrl);
+    loadDimmingDetails(dimmingDetailsUrl, '#moveJPEG');
   });
 };
 
@@ -13,8 +13,8 @@ function render(imageUrl) {
   const resultImage = document.getElementById('resultImage');
 
   // Set the desired width and height for the image
-  resultImage.width = 720; // Replace with your preferred width
-  resultImage.height = 720; // Replace with your preferred height
+  resultImage.width = 600; // Replace with your preferred width
+  resultImage.height = 600; // Replace with your preferred height
 
   resultImage.src = imageUrl;
 }
@@ -27,8 +27,8 @@ function playVideo(videoUrl) {
   videoPlayer.src = formattedVideoUrl;
 
   // Set the desired width and height for the video player
-  videoPlayer.width = 720; // Replace with your preferred width
-  videoPlayer.height = 720; // Replace with your preferred height
+  videoPlayer.width = 620; // Replace with your preferred width
+  videoPlayer.height = 620; // Replace with your preferred height
 
   videoPlayer.play();
 
@@ -39,32 +39,61 @@ function playVideo(videoUrl) {
   });
 }
 
+
+
+
 function loadDimmingDetails(dimmingDetailsUrl) {
-  // Fetch dimming details HTML content
+  // Fetch HTML content from the website
   fetch(dimmingDetailsUrl)
     .then(response => response.text())
     .then(html => {
-      console.log('Dimming Details HTML:', html); // Log the entire HTML content
+      // Extract image information from the JavaScript code
+      const regex = /JPEG\d\.src\s*=\s*'([^']+)'/g;
+      const matches = html.matchAll(regex);
 
-      // Inject the HTML into a container element
-      const dimmingContainer = document.getElementById('dimmingContainer');
-      dimmingContainer.innerHTML = html;
+      const imageUrls = [];
+      for (const match of matches) {
+        // Construct complete URLs using the base URL
+        const baseUrl = 'https://www.sidc.be/solardemon/science/';
+        const completeUrl = new URL(match[1], baseUrl);
+        imageUrls.push(completeUrl.href);
+      }
 
-      // Extract the image URL from the loaded HTML
-      const moveJPEGImage = document.getElementById('moveJPEG');
+      if (imageUrls.length > 0) {
+        // Display the image URLs (replace this with your own logic)
+        console.log('Image URLs:', imageUrls);
 
-      if (moveJPEGImage) {
-        // Create an img element for the dimming image
-        const dimmingImage = document.createElement('img');
-        dimmingImage.src = moveJPEGImage.src;
-
-        // Append the dimming image to the container
-        dimmingContainer.appendChild(dimmingImage);
+        // Use the first image URL for display (replace this with your own logic)
+        displayImage(imageUrls[0]);
       } else {
-        console.error('Element with id "moveJPEG" not found in dimming details.');
+        console.error('No image URLs found in the website content.');
       }
     })
-    .catch(error => console.error('Error loading dimming details:', error));
+    .catch(error => console.error('Error loading website content:', error));
 }
 
+
+
+function displayImage(imageUrl) {
+  // Construct the absolute URL using the base URL of the website
+  const baseURL = new URL(imageUrl).origin;
+  const absoluteURL = new URL(imageUrl, baseURL).toString();
+
+  // Find the container element where you want to display the image
+  const imageContainer = document.getElementById('imgElement');
+
+  // Check if the container element is found
+  if (imageContainer) {
+
+
+    imgElement.width = 600; // Replace with your preferred width
+    imgElement.height = 600; // Replace with your preferred height
   
+    // Set the src attribute to trigger the image loading
+    imgElement.src = absoluteURL;
+  } else {
+    console.error('Image container not found.');
+  }
+}
+
+
