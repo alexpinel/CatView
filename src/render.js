@@ -1,6 +1,21 @@
 // renderer.js
 const { ipcRenderer } = require('electron');
 
+
+document.getElementById('nextImage').addEventListener('click', () => {
+  ipcRenderer.send('load-next-image');
+});
+
+document.getElementById('previousImage').addEventListener('click', () => {
+  ipcRenderer.send('load-previous-image');
+});
+
+document.getElementById('goToCustomImage').addEventListener('click', () => {
+  const customIndex = document.getElementById('customIndex').value;
+  ipcRenderer.send('load-custom-image', parseInt(customIndex, 10));
+});
+
+
 window.onload = () => {
   ipcRenderer.on('image-loaded', (event, { imageUrl, videoUrl, dimmingDetailsUrl }) => {
     render(imageUrl);
@@ -95,5 +110,4 @@ function displayImage(imageUrl) {
     console.error('Image container not found.');
   }
 }
-
 

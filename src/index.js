@@ -29,6 +29,17 @@ const createWindow = () => {
 
 
 let videoUrls = [];
+let dimmingDetailsUrls = [];
+
+const convertDatePicFormat = (originalDate) => {
+  const formattedDate = moment(originalDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  return formattedDate;
+};
+
+const convertDateVidFormat = (originalDate) => {
+  const formattedVidDate = moment(originalDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY');
+  return formattedVidDate;
+};
 
 const loadAndProcessCSV = async () => {
   const csvFilePath = path.join(__dirname, '../alex_database.csv');
@@ -57,35 +68,52 @@ const loadAndProcessCSV = async () => {
       imageUrls = data.map((item) => item.apiUrl);
       videoUrls = data.map((item) => item.videoFilePath);
       dimmingDetailsUrls = data.map((item) => item.dimmingDetailsUrl);
-      
+
       ipcMain.on('load-next-image', loadNextImage);
+      ipcMain.on('load-previous-image', loadPreviousImage);
+      ipcMain.on('load-custom-image', loadCustomImage);
+
       loadNextImage();
     });
 };
 
-
-const convertDatePicFormat = (originalDate) => {
-  const formattedDate = moment(originalDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-  return formattedDate;
-};
-
-const convertDateVidFormat = (originalDate) => {
-  const formattedVidDate = moment(originalDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY');
-  return formattedVidDate;
-};
-
 const loadNextImage = () => {
   if (currentImageIndex < imageUrls.length) {
-    const imageUrl = imageUrls[currentImageIndex];
-    const videoUrl = videoUrls[currentImageIndex];
-    const dimmingDetailsUrl = dimmingDetailsUrls[currentImageIndex];
-    mainWindow.webContents.send('image-loaded', { imageUrl, videoUrl, dimmingDetailsUrl });
+    loadAndSendImage(currentImageIndex);
     currentImageIndex++;
   } else {
     // All images loaded, do something or reset for the next iteration
     currentImageIndex = 0;
   }
 };
+
+const loadPreviousImage = () => {
+  if (currentImageIndex > 0) {
+    currentImageIndex--;
+    loadAndSendImage(currentImageIndex);
+  } else {
+    // Handle when trying to go beyond the first image
+  }
+};
+
+const loadCustomImage = (event, customIndex) => {
+  if (customIndex >= 0 && customIndex < imageUrls.length) {
+    currentImageIndex = customIndex;
+    loadAndSendImage(currentImageIndex);
+  } else {
+    // Handle invalid custom index
+  }
+};
+
+const loadAndSendImage = (index) => {
+  const imageUrl = imageUrls[index];
+  const videoUrl = videoUrls[index];
+  const dimmingDetailsUrl = dimmingDetailsUrls[index];
+  mainWindow.webContents.send('image-loaded', { imageUrl, videoUrl, dimmingDetailsUrl });
+};
+
+// ... (unchanged code)
+
 
 app.on('ready', createWindow);
 
