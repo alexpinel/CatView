@@ -14,7 +14,7 @@
       <img id="resultImage" alt="Result Image">
     </div>
     <div style="width: 610px; height: 610px;" class="relative h-full w-full rounded-xl shadow-[0px_0px_0px_1px_rgba(9,9,11,0.07),0px_2px_2px_0px_rgba(9,9,11,0.05)] bg-zinc-900 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline">
-      <video id="videoPlayer" controls ></video>
+      <video id="videoPlayer" controls playbackrate="0.25"></video>
     </div>
     <div style="width: 610px; height: 610px;" class="relative h-full w-full rounded-xl shadow-[0px_0px_0px_1px_rgba(9,9,11,0.07),0px_2px_2px_0px_rgba(9,9,11,0.05)] bg-zinc-900 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline">
       <img id="imgElement" ></img>
@@ -22,25 +22,25 @@
   </div>
 
   <div class="mt-8">
-    <table class="min-w-full border border-zinc-600 dark:border-zinc-800">
+    <table id="csvDataTable" class="min-w-full rounded-xl shadow-[0px_0px_0px_1px_rgba(9,9,11,0.07),0px_2px_2px_0px_rgba(9,9,11,0.05)] bg-zinc-900 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline text-white">
       <thead>
-        <tr>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME ID</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME Date</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME PA</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME Width</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">HARPNUM</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LONDTMIN</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LONDTMAX</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LATDMIN</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LATDMAX</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">Flare ID</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">Dimming ID</th>
-          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">V score</th>
+        <tr id="csvTableHeader">
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">CME ID</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">CME Date</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">CME PA</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">CME Width</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">HARPNUM</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">LONDTMIN</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">LONDTMAX</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">LATDMIN</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">LATDMAX</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">Flare ID</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">Dimming ID</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 px-4 py-2 w-1/5">V score</th>
           <!-- Add other headers as needed -->
         </tr>
       </thead>
-      <tbody id="csvTableBody"></tbody>
+      <tbody></tbody>
     </table>
   </div>
   

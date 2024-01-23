@@ -22,7 +22,6 @@ const createWindow = () => {
 
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
-  mainWindow.webContents.openDevTools();
 
   loadAndProcessCSV();
 };
@@ -31,6 +30,7 @@ const createWindow = () => {
 let videoUrls = [];
 let dimmingDetailsUrls = [];
 let currentRowIndex = 0;
+let csvData = [];
 
 const convertDatePicFormat = (originalDate) => {
   const formattedDate = moment(originalDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
@@ -49,7 +49,19 @@ const loadAndProcessCSV = async () => {
   fs.createReadStream(csvFilePath)
     .pipe(csv())
     .on('data', (row) => {
+      const cmeId = row.cme_id; // Add other properties as needed
       const cmeDate = row.cme_date;
+      const cmePa = row.cme_pa;
+      const cme_width = row.cme_width; // Add other properties as needed
+      const harpnum = row.harpnum;
+      const LONDTMIN = row.LONDTMIN;
+      const LONDTMAX = row.LONDTMAX; // Add other properties as needed
+      const LATDTMIN = row.LATDTMIN;
+      const LATDTMAX = row.LATDTMAX;
+      const flare_id = row.flare_id; // Add other properties as needed
+      const dimming_id = row.dimming_id;
+      const verification_score = row.verification_score;
+
       const formattedDate = convertDatePicFormat(cmeDate);
       const formattedVidDate = convertDateVidFormat(cmeDate);
       const videoFileName = `${formattedVidDate}.01.01.mov`;
@@ -63,39 +75,21 @@ const loadAndProcessCSV = async () => {
       const dimmingId = parseFloat(row.dimming_id).toString(); // Remove trailing zeros
       const dimmingDetailsUrl = `https://www.sidc.be/solardemon/science/dimmings_details.php?science=1&dimming_id=${dimmingId}&delay=80&prefix=dimming_mask_&small=1&aid=0&graph=1`;
     
-      data.push({ apiUrl, videoFilePath, dimmingDetailsUrl });
+      data.push({ cmeId, cmeDate, cmePa, cme_width, harpnum, LONDTMIN, LONDTMAX, LATDTMIN, LATDTMAX, flare_id, dimming_id, verification_score, videoFilePath, apiUrl, dimmingDetailsUrl });
     })
     .on('end', () => {
+      csvData = data;
       imageUrls = data.map((item) => item.apiUrl);
       videoUrls = data.map((item) => item.videoFilePath);
       dimmingDetailsUrls = data.map((item) => item.dimmingDetailsUrl);
     });
+  
     ipcMain.on('load-next-image', loadNextImage);
     ipcMain.on('load-previous-image', loadPreviousImage);
     ipcMain.on('load-custom-image', loadCustomImage);
 
     loadNextImage();
 
-    const csvData = data.map((row) => ({
-    cme_id: row.cme_id,
-    cme_date: row.cme_date,
-    cme_pa: row.cme_pa,
-    cme_width: row.cme_width,
-    harpnum: row.harpnum,
-    LONDTMIN: row.LONDTMIN,
-    LONDTMAX: row.LONDTMAX,
-    LATDTMIN: row.LATDTMIN,
-    LATDTMAX: row.LATDTMAX,
-    flare_id: row.flare_id,
-    dimming_id: row.dimming_id,
-    verification_score: row.verification_score,
-
-
-
-  }));
-
-  console.log('CSV Data:', csvData);
-  mainWindow.webContents.send('csv-data', csvData);
 };
 
 const loadNextImage = () => {
@@ -130,8 +124,11 @@ const loadAndSendImage = (index) => {
   const imageUrl = imageUrls[index];
   const videoUrl = videoUrls[index];
   const dimmingDetailsUrl = dimmingDetailsUrls[index];
-  mainWindow.webContents.send('image-loaded', { imageUrl, videoUrl, dimmingDetailsUrl });
+  const csvRowData = csvData[index];
+
+  mainWindow.webContents.send('image-loaded', { imageUrl, videoUrl, dimmingDetailsUrl, csvRowData });
 };
+
 
 // ... (unchanged code)
 

@@ -618,12 +618,24 @@ video {
   display: table;
 }
 
+.grid {
+  display: grid;
+}
+
+.contents {
+  display: contents;
+}
+
 .h-full {
   height: 100%;
 }
 
 .w-full {
   width: 100%;
+}
+
+.w-1\/5 {
+  width: 20%;
 }
 
 .min-w-full {
@@ -645,6 +657,10 @@ video {
 
 .items-center {
   align-items: center;
+}
+
+.gap-\[17px\] {
+  gap: 17px;
 }
 
 .rounded {
@@ -737,6 +753,18 @@ video {
 .hover\:bg-blue-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+}
+
+@media (min-width: 640px) {
+  .sm\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:grid-cols-\[repeat\(15\2c _minmax\(0\2c _1fr\)\)\] {
+    grid-template-columns: repeat(15, minmax(0, 1fr));
+  }
 }
 
 @media (prefers-color-scheme: dark) {

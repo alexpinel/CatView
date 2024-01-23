@@ -112,20 +112,46 @@ function displayImage(imageUrl) {
 }
 
 
+const csvDataTable = document.getElementById('csvDataTable');
+const csvTableHeader = document.getElementById('csvTableHeader');
 
-ipcRenderer.on('csv-data', (event, csvData) => {
-  const tableBody = document.getElementById('csvTableBody');
-  tableBody.innerHTML = '';
+ipcRenderer.on('image-loaded', (event, data) => {
+  updateCsvTable(data.csvRowData);
+});
 
-  csvData.forEach((row) => {
-    const tr = document.createElement('tr');
+function updateCsvTable(csvRowData) {
+  console.log('Updating table with data:', csvRowData);
 
-    Object.entries(row).forEach(([key, value]) => {
-      const td = document.createElement('td');
-      td.textContent = value;
-      tr.appendChild(td);
+  const includedProperties = [ 'cmeId', 'cmeDate', 'cmePa', 'cme_width', 'harpnum', 'LONDTMIN', 'LONDTMAX', 'LATDTMIN', 'LATDTMAX', 'flare_id', 'dimming_id', 'verification_score']; // Add properties to include
+
+  const tbody = csvDataTable.querySelector('tbody');
+  const row = document.createElement('tr');
+
+  if (Object.keys(csvRowData).length > 0) {
+    // Update table headers if not already done
+    if (csvTableHeader.children.length === 0) {
+      Object.keys(csvRowData).forEach((key) => {
+        // Include only specified properties in headers
+        if (includedProperties.includes(key)) {
+          const th = document.createElement('th');
+          th.textContent = key;
+          csvTableHeader.appendChild(th);
+        }
+      });
+    }
+
+    Object.keys(csvRowData).forEach((key) => {
+      if (includedProperties.includes(key)) {
+        const cell = document.createElement('td');
+        const cellContent = csvRowData[key] !== undefined ? csvRowData[key].toString() : '';
+        cell.innerHTML = cellContent;
+        row.appendChild(cell);
+      }
     });
 
-    tableBody.appendChild(tr);
-  });
-});
+    // Clear existing rows and append the new row
+    tbody.innerHTML = '';
+    tbody.appendChild(row);
+  }
+}
+
