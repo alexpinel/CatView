@@ -75,7 +75,7 @@ const loadAndProcessCSV = async () => {
       const dimmingId = parseFloat(row.dimming_id).toString(); // Remove trailing zeros
       const dimmingDetailsUrl = `https://www.sidc.be/solardemon/science/dimmings_details.php?science=1&dimming_id=${dimmingId}&delay=80&prefix=dimming_mask_&small=1&aid=0&graph=1`;
     
-      data.push({ cmeId, cmeDate, cmePa, cme_width, harpnum, LONDTMIN, LONDTMAX, LATDTMIN, LATDTMAX, flare_id, dimming_id, verification_score, videoFilePath, apiUrl, dimmingDetailsUrl });
+      data.push({ cmeId, cmeDate, cmePa, cme_width, harpnum, LONDTMIN, LONDTMAX, LATDTMIN, LATDTMAX, flare_id, dimming_id, verification_score,  videoFilePath, apiUrl, dimmingDetailsUrl });
     })
     .on('end', () => {
       csvData = data;

@@ -57,6 +57,10 @@ function playVideo(videoUrl) {
 
 
 
+// Your existing code...
+
+let intervalId; // Variable to store the interval ID
+
 function loadDimmingDetails(dimmingDetailsUrl) {
   // Fetch HTML content from the website
   fetch(dimmingDetailsUrl)
@@ -78,14 +82,54 @@ function loadDimmingDetails(dimmingDetailsUrl) {
         // Display the image URLs (replace this with your own logic)
         console.log('Image URLs:', imageUrls);
 
-        // Use the first image URL for display (replace this with your own logic)
-        displayImage(imageUrls[0]);
+        // Clear existing interval and display the first image
+        resetImageSequence(imageUrls);
       } else {
         console.error('No image URLs found in the website content.');
       }
     })
     .catch(error => console.error('Error loading website content:', error));
 }
+
+function resetImageSequence(imageUrls) {
+  clearInterval(intervalId); // Clear existing interval
+
+  let currentIndex = 0;
+
+  // Display the first image
+  displayImage(imageUrls[currentIndex]);
+
+  // Set interval to change the displayed image
+  intervalId = setInterval(() => {
+    currentIndex = (currentIndex + 1) % imageUrls.length;
+    displayImage(imageUrls[currentIndex]);
+  }, 200); // Change the interval time (in milliseconds) as needed
+}
+
+function displayImage(imageUrl) {
+  // Replace this with your logic to display the image
+  console.log('Displaying image:', imageUrl);
+  // Your display logic here
+}
+
+// Event listeners for the buttons
+document.getElementById('previousImage').addEventListener('click', () => {
+  clearInterval(intervalId); // Clear existing interval
+  // Your logic for going to the previous image here
+});
+
+document.getElementById('nextImage').addEventListener('click', () => {
+  clearInterval(intervalId); // Clear existing interval
+  // Your logic for going to the next image here
+});
+
+document.getElementById('goToCustomImage').addEventListener('click', () => {
+  clearInterval(intervalId); // Clear existing interval
+  // Your logic for going to a custom image based on the input value here
+});
+
+// Your existing code...
+
 
 
 
@@ -140,14 +184,14 @@ function updateCsvTable(csvRowData) {
       });
     }
 
-    Object.keys(csvRowData).forEach((key) => {
-      if (includedProperties.includes(key)) {
-        const cell = document.createElement('td');
-        const cellContent = csvRowData[key] !== undefined ? csvRowData[key].toString() : '';
-        cell.innerHTML = cellContent;
-        row.appendChild(cell);
-      }
-    });
+Object.keys(csvRowData).forEach((key) => {
+  if (includedProperties.includes(key)) {
+    const cell = document.createElement('td');
+    const cellContent = csvRowData[key] !== undefined ? csvRowData[key].toString() : '';
+    cell.innerHTML = cellContent;
+    row.appendChild(cell);
+  }
+});
 
     // Clear existing rows and append the new row
     tbody.innerHTML = '';
