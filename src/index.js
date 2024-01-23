@@ -30,6 +30,7 @@ const createWindow = () => {
 
 let videoUrls = [];
 let dimmingDetailsUrls = [];
+let currentRowIndex = 0;
 
 const convertDatePicFormat = (originalDate) => {
   const formattedDate = moment(originalDate, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
@@ -52,29 +53,49 @@ const loadAndProcessCSV = async () => {
       const formattedDate = convertDatePicFormat(cmeDate);
       const formattedVidDate = convertDateVidFormat(cmeDate);
       const videoFileName = `${formattedVidDate}.01.01.mov`;
-
+    
       // Assume the videos are stored in the same directory as the CSV file
       const videoFilePath = path.join(__dirname, '..', 'SHARPS', videoFileName);
-
+    
       const apiUrl = `https://helioviewer-api.ias.u-psud.fr/v2/takeScreenshot/?imageScale=2.4204409&layers=[SDO,AIA,AIA,335,1,100]&events=&eventLabels=true&scale=true&scaleType=earth&scaleX=0&scaleY=0&date=${formattedDate}&x1=-1000&x2=1000&y1=-1000&y2=1000&display=true&watermark=true&events=[CH,all,1]`;
-
+    
       // Add dimming_id and generate dimming details URL
       const dimmingId = parseFloat(row.dimming_id).toString(); // Remove trailing zeros
       const dimmingDetailsUrl = `https://www.sidc.be/solardemon/science/dimmings_details.php?science=1&dimming_id=${dimmingId}&delay=80&prefix=dimming_mask_&small=1&aid=0&graph=1`;
-
+    
       data.push({ apiUrl, videoFilePath, dimmingDetailsUrl });
     })
     .on('end', () => {
       imageUrls = data.map((item) => item.apiUrl);
       videoUrls = data.map((item) => item.videoFilePath);
       dimmingDetailsUrls = data.map((item) => item.dimmingDetailsUrl);
-
-      ipcMain.on('load-next-image', loadNextImage);
-      ipcMain.on('load-previous-image', loadPreviousImage);
-      ipcMain.on('load-custom-image', loadCustomImage);
-
-      loadNextImage();
     });
+    ipcMain.on('load-next-image', loadNextImage);
+    ipcMain.on('load-previous-image', loadPreviousImage);
+    ipcMain.on('load-custom-image', loadCustomImage);
+
+    loadNextImage();
+
+    const csvData = data.map((row) => ({
+    cme_id: row.cme_id,
+    cme_date: row.cme_date,
+    cme_pa: row.cme_pa,
+    cme_width: row.cme_width,
+    harpnum: row.harpnum,
+    LONDTMIN: row.LONDTMIN,
+    LONDTMAX: row.LONDTMAX,
+    LATDTMIN: row.LATDTMIN,
+    LATDTMAX: row.LATDTMAX,
+    flare_id: row.flare_id,
+    dimming_id: row.dimming_id,
+    verification_score: row.verification_score,
+
+
+
+  }));
+
+  console.log('CSV Data:', csvData);
+  mainWindow.webContents.send('csv-data', csvData);
 };
 
 const loadNextImage = () => {

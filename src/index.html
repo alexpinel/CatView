@@ -8,21 +8,60 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
-<body class="flex flex-col items-center bg-gray-700">
-  <div class="flex items-center mb-4">
-    <img id="resultImage" alt="Result Image" class="mr-4">
-    <video id="videoPlayer" controls class="mr-4"></video>
-    <img id="imgElement" class="mr-4"></img>
+<body class="flex flex-col items-center font-sans dark:bg-zinc-950">
+  <div class="flex items-center mt-10">
+    <div style="width: 610px; height: 610px;" class="relative h-full w-full rounded-xl shadow-[0px_0px_0px_1px_rgba(9,9,11,0.07),0px_2px_2px_0px_rgba(9,9,11,0.05)] bg-zinc-900 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline">
+      <img id="resultImage" alt="Result Image">
+    </div>
+    <div style="width: 610px; height: 610px;" class="relative h-full w-full rounded-xl shadow-[0px_0px_0px_1px_rgba(9,9,11,0.07),0px_2px_2px_0px_rgba(9,9,11,0.05)] bg-zinc-900 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline">
+      <video id="videoPlayer" controls ></video>
+    </div>
+    <div style="width: 610px; height: 610px;" class="relative h-full w-full rounded-xl shadow-[0px_0px_0px_1px_rgba(9,9,11,0.07),0px_2px_2px_0px_rgba(9,9,11,0.05)] bg-zinc-900 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline">
+      <img id="imgElement" ></img>
+    </div>
   </div>
-  <button id="switch day" onclick="loadNextImage()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-    Load Next Image
-  </button>
 
-  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="nextImage">Next Image</button>
-  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="previousImage">Previous Image</button>
-  <label for="customIndex">Go to Custom Image: </label>
-  <input type="number" id="customIndex" min="0" max="999" step="1">
-  <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="goToCustomImage">Go</button>
+  <div class="mt-8">
+    <table class="min-w-full border border-zinc-600 dark:border-zinc-800">
+      <thead>
+        <tr>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME ID</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME Date</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME PA</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">CME Width</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">HARPNUM</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LONDTMIN</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LONDTMAX</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LATDMIN</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">LATDMAX</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">Flare ID</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">Dimming ID</th>
+          <th class="text-white border-b border-zinc-600 dark:border-zinc-800 py-2 px-4">V score</th>
+          <!-- Add other headers as needed -->
+        </tr>
+      </thead>
+      <tbody id="csvTableBody"></tbody>
+    </table>
+  </div>
+  
+  <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 flex mb-10">
+    <button class="bg-zinc-800 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="previousImage">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M6 12H18M6 12L11 7M6 12L11 17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <button class="bg-zinc-800 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="nextImage">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M6 12H18M18 12L13 7M18 12L13 17" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+    <input type="number" id="customIndex" min="0" max="999" step="1">
+    <button class="bg-zinc-800 dark:shadow-[0px_0px_0px_1px_rgba(255,255,255,0.1)] before:pointer-events-none before:absolute before:-inset-px before:rounded-xl before:shadow-[0px_2px_8px_0px_rgba(0,_0,_0,_0.20),_0px_1px_0px_0px_rgba(255,_255,_255,_0.06)_inset] forced-colors:outline hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="goToCustomImage">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M8 8L12 4M12 4L16 8M12 4V16M4 20H20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
 
   <script>
     function loadNextImage() {

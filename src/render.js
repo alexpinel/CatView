@@ -111,3 +111,21 @@ function displayImage(imageUrl) {
   }
 }
 
+
+
+ipcRenderer.on('csv-data', (event, csvData) => {
+  const tableBody = document.getElementById('csvTableBody');
+  tableBody.innerHTML = '';
+
+  csvData.forEach((row) => {
+    const tr = document.createElement('tr');
+
+    Object.entries(row).forEach(([key, value]) => {
+      const td = document.createElement('td');
+      td.textContent = value;
+      tr.appendChild(td);
+    });
+
+    tableBody.appendChild(tr);
+  });
+});
