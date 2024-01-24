@@ -610,6 +610,14 @@ video {
   margin-top: 2rem;
 }
 
+.mt-14 {
+  margin-top: 3.5rem;
+}
+
+.mt-20 {
+  margin-top: 5rem;
+}
+
 .flex {
   display: flex;
 }
@@ -624,6 +632,10 @@ video {
 
 .contents {
   display: contents;
+}
+
+.hidden {
+  display: none;
 }
 
 .h-full {
@@ -790,3 +802,73 @@ video {
     outline-style: solid;
   }
 }
+
+#imageContainer {
+  @apply absolute z-40;
+}
+
+#draggableImage {
+  @apply w-48 h-48 cursor-move;
+}
+
+.hidden {
+  @apply hidden;
+}
+
+.resize-container {
+  position: relative;
+}
+
+.resize-handle {
+  position: absolute;
+  background-color: #3490dc;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.resize-handle.top-left {
+  top: 0;
+  left: 0;
+  cursor: nwse-resize;
+}
+
+.resize-handle.top-right {
+  top: 0;
+  right: 0;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-left {
+  bottom: 0;
+  left: 0;
+  cursor: nesw-resize;
+}
+
+.resize-handle.bottom-right {
+  bottom: 0;
+  right: 0;
+  cursor: nwse-resize;
+}
+
+.resize-handle.top,
+.resize-handle.bottom {
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.resize-handle.left,
+.resize-handle.right {
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
+
+        /* Additional styles to make the image container semi-transparent and not block pointer events */
+        #imageContainer.active {
+          background-color: rgba(0, 0, 0, 0.5);
+          pointer-events: none;
+      }

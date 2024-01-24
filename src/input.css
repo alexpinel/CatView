@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#imageContainer {
+    @apply absolute z-40;
+}
+
+#draggableImage {
+    @apply w-48 h-48 cursor-move;
+}
+
+.hidden {
+    @apply hidden;
+}
