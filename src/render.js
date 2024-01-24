@@ -199,31 +199,32 @@ Object.keys(csvRowData).forEach((key) => {
   }
 }
 
-
-
 const interact = require('interactjs');
-
 
 let isImageVisible = false;
 let imageContainer;
+let draggableContainers = [];
 
 document.addEventListener('DOMContentLoaded', () => {
     const toggleButton = document.getElementById('toggleButton');
     imageContainer = document.getElementById('imageContainer');
-    const draggableContainer = document.getElementById('draggableContainer');
+
+    for (let i = 1; i <= 2; i++) {
+        const draggableContainer = document.getElementById(`draggableContainer${i}`);
+        draggableContainers.push(draggableContainer);
+
+        interact(draggableContainer)
+            .draggable({
+                onmove: (event) => dragMoveListener(event, i),
+            })
+            .resizable({
+                edges: { left: true, right: true, bottom: true, top: true },
+                onmove: (event) => resizeMoveListener(event, i),
+            });
+    }
 
     toggleButton.addEventListener('click', toggleImage);
 
-    interact(draggableContainer)
-        .draggable({
-            onmove: dragMoveListener,
-        })
-        .resizable({
-            edges: { left: true, right: true, bottom: true, top: true },
-            onmove: resizeMoveListener,
-        });
-
-    // Listen for the 'Escape' key press to toggle the image
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             toggleImage();
@@ -236,17 +237,17 @@ function toggleImage() {
     imageContainer.classList.toggle('hidden', !isImageVisible);
 }
 
-function dragMoveListener(event) {
+function dragMoveListener(event, index) {
     const target = event.target;
     const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
     const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-    target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
     target.setAttribute('data-x', x);
     target.setAttribute('data-y', y);
 }
 
-function resizeMoveListener(event) {
+function resizeMoveListener(event, index) {
     const target = event.target;
     const x = (parseFloat(target.getAttribute('data-x')) || 0);
     const y = (parseFloat(target.getAttribute('data-y')) || 0);
