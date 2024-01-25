@@ -11,8 +11,8 @@ let currentImageIndex = 0;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 900,
-    height: 700,
+    width: 1920,
+    height: 1080,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
