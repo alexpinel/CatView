@@ -17,13 +17,14 @@ document.getElementById('goToCustomImage').addEventListener('click', () => {
 
 
 window.onload = () => {
-  ipcRenderer.on('image-loaded', (event, { imageUrl, videoUrl, dimmingDetailsUrl }) => {
-    render(imageUrl);
+  ipcRenderer.on('image-loaded', (event, { apiUrl, videoUrl, dimmingDetailsUrl }) => {
+    loadlinkDetails(apiUrl, '#moveJPEG');
     playVideo(videoUrl);
     loadDimmingDetails(dimmingDetailsUrl, '#moveJPEG');
   });
 };
 
+/*
 function render(imageUrl) {
   const resultImage = document.getElementById('resultImage');
 
@@ -33,6 +34,7 @@ function render(imageUrl) {
 
   resultImage.src = imageUrl;
 }
+*/
 
 function playVideo(videoUrl) {
   // Prepend 'file://' to the local file path
@@ -55,7 +57,97 @@ function playVideo(videoUrl) {
 }
 
 
+let intervalId_1; // Variable to store the interval ID
 
+function loadlinkDetails(apiUrl) {
+  // Fetch HTML content from the website
+  fetch(apiUrl)
+    .then(response => response.text())
+    .then(html => {
+      // Extract image information from the JavaScript code
+      const regex = /my_images\[\d+\]\s*=\s*'([^']+)'/g;
+      const matches = html.matchAll(regex);
+
+      const imageUrls_1 = [];
+      for (const match of matches) {
+        // Construct complete URLs using the base URL
+        const baseUrl = 'https://www.sidc.be/solardemon/science/';
+        const completeUrl = new URL(match[1], baseUrl);
+        imageUrls_1.push(completeUrl.href);
+      }
+
+      if (imageUrls_1.length > 0) {
+        // Display the image URLs (replace this with your own logic)
+        console.log('Image URLs 1:', imageUrls_1);
+
+        // Clear existing interval and display the first image
+        resetImageSequence_1(imageUrls_1);
+      } else {
+        console.error('No image URLs found in the website content.');
+      }
+    })
+    .catch(error => console.error('Error loading website content:', error));
+}
+
+function resetImageSequence_1(imageUrls_1) {
+  clearInterval(intervalId_1); // Clear existing interval
+
+  let currentIndex = 0;
+
+  // Display the first image
+  displayImage_1(imageUrls_1[currentIndex]);
+
+  // Set interval to change the displayed image
+  intervalId_1 = setInterval(() => {
+    currentIndex = (currentIndex + 1) % imageUrls_1.length;
+    displayImage_1(imageUrls_1[currentIndex]);
+  }, 100); // Change the interval time (in milliseconds) as needed
+}
+
+function displayImage_1(imageUrl_1) {
+  // Replace this with your logic to display the image
+  console.log('Displaying image:', imageUrl_1);
+  // Your display logic here
+}
+
+// Event listeners for the buttons
+document.getElementById('previousImage').addEventListener('click', () => {
+  clearInterval(intervalId_1); // Clear existing interval
+  // Your logic for going to the previous image here
+});
+
+document.getElementById('nextImage').addEventListener('click', () => {
+  clearInterval(intervalId_1); // Clear existing interval
+  // Your logic for going to the next image here
+});
+
+document.getElementById('goToCustomImage').addEventListener('click', () => {
+  clearInterval(intervalId_1); // Clear existing interval
+  // Your logic for going to a custom image based on the input value here
+});
+
+
+function displayImage_1(imageUrl_1) {
+  // Construct the absolute URL using the base URL of the website
+  const baseURL_1 = new URL(imageUrl_1).origin;
+  const absoluteURL_1 = new URL(imageUrl_1, baseURL_1).toString();
+
+  // Find the container element where you want to display the image
+  const resultImage = document.getElementById('resultImage');
+
+  // Check if the container element is found
+  if (resultImage) {
+
+
+    resultImage.width = 600; // Replace with your preferred width
+    resultImage.height = 600; // Replace with your preferred height
+
+    // Set the src attribute to trigger the image loading
+    resultImage.src = absoluteURL_1;
+  } else {
+    console.error('Image container not found.');
+  }
+}
 
 // Your existing code...
 
@@ -147,7 +239,7 @@ function displayImage(imageUrl) {
 
     imgElement.width = 600; // Replace with your preferred width
     imgElement.height = 600; // Replace with your preferred height
-  
+
     // Set the src attribute to trigger the image loading
     imgElement.src = absoluteURL;
   } else {
@@ -166,7 +258,7 @@ ipcRenderer.on('image-loaded', (event, data) => {
 function updateCsvTable(csvRowData) {
   console.log('Updating table with data:', csvRowData);
 
-  const includedProperties = [ 'cmeId', 'cmeDate', 'cmePa', 'cme_width', 'harpnum', 'LONDTMIN', 'LONDTMAX', 'LATDTMIN', 'LATDTMAX', 'flare_id', 'dimming_id', 'verification_score']; // Add properties to include
+  const includedProperties = ['cmeId', 'cmeDate', 'cmePa', 'cme_width', 'harpnum', 'LONDTMIN', 'LONDTMAX', 'LATDTMIN', 'LATDTMAX', 'flare_id', 'dimming_id', 'verification_score']; // Add properties to include
 
   const tbody = csvDataTable.querySelector('tbody');
   const row = document.createElement('tr');
@@ -184,14 +276,14 @@ function updateCsvTable(csvRowData) {
       });
     }
 
-Object.keys(csvRowData).forEach((key) => {
-  if (includedProperties.includes(key)) {
-    const cell = document.createElement('td');
-    const cellContent = csvRowData[key] !== undefined ? csvRowData[key].toString() : '';
-    cell.innerHTML = cellContent;
-    row.appendChild(cell);
-  }
-});
+    Object.keys(csvRowData).forEach((key) => {
+      if (includedProperties.includes(key)) {
+        const cell = document.createElement('td');
+        const cellContent = csvRowData[key] !== undefined ? csvRowData[key].toString() : '';
+        cell.innerHTML = cellContent;
+        row.appendChild(cell);
+      }
+    });
 
     // Clear existing rows and append the new row
     tbody.innerHTML = '';
@@ -206,55 +298,55 @@ let imageContainer;
 let draggableContainers = [];
 
 document.addEventListener('DOMContentLoaded', () => {
-    const toggleButton = document.getElementById('toggleButton');
-    imageContainer = document.getElementById('imageContainer');
+  const toggleButton = document.getElementById('toggleButton');
+  imageContainer = document.getElementById('imageContainer');
 
-    for (let i = 1; i <= 2; i++) {
-        const draggableContainer = document.getElementById(`draggableContainer${i}`);
-        draggableContainers.push(draggableContainer);
+  for (let i = 1; i <= 2; i++) {
+    const draggableContainer = document.getElementById(`draggableContainer${i}`);
+    draggableContainers.push(draggableContainer);
 
-        interact(draggableContainer)
-            .draggable({
-                onmove: (event) => dragMoveListener(event, i),
-            })
-            .resizable({
-                edges: { left: true, right: true, bottom: true, top: true },
-                onmove: (event) => resizeMoveListener(event, i),
-            });
+    interact(draggableContainer)
+      .draggable({
+        onmove: (event) => dragMoveListener(event, i),
+      })
+      .resizable({
+        edges: { left: true, right: true, bottom: true, top: true },
+        onmove: (event) => resizeMoveListener(event, i),
+      });
+  }
+
+  toggleButton.addEventListener('click', toggleImage);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      toggleImage();
     }
-
-    toggleButton.addEventListener('click', toggleImage);
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            toggleImage();
-        }
-    });
+  });
 });
 
 function toggleImage() {
-    isImageVisible = !isImageVisible;
-    imageContainer.classList.toggle('hidden', !isImageVisible);
+  isImageVisible = !isImageVisible;
+  imageContainer.classList.toggle('hidden', !isImageVisible);
 }
 
 function dragMoveListener(event, index) {
-    const target = event.target;
-    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+  const target = event.target;
+  const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+  const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
+  target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+  target.setAttribute('data-x', x);
+  target.setAttribute('data-y', y);
 }
 
 function resizeMoveListener(event, index) {
-    const target = event.target;
-    const x = (parseFloat(target.getAttribute('data-x')) || 0);
-    const y = (parseFloat(target.getAttribute('data-y')) || 0);
+  const target = event.target;
+  const x = (parseFloat(target.getAttribute('data-x')) || 0);
+  const y = (parseFloat(target.getAttribute('data-y')) || 0);
 
-    target.style.width = event.rect.width + 'px';
-    target.style.height = event.rect.height + 'px';
+  target.style.width = event.rect.width + 'px';
+  target.style.height = event.rect.height + 'px';
 
-    target.setAttribute('data-x', x);
-    target.setAttribute('data-y', y);
+  target.setAttribute('data-x', x);
+  target.setAttribute('data-y', y);
 }
