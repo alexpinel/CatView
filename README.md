@@ -1,5 +1,3 @@
-![sun-smiley](https://github.com/alexpinel/jCatalogueViewer/assets/93524949/daf8313a-6d76-41f1-bdd0-b29f2627c3a6)
+![caaat](https://github.com/alexpinel/CatView/assets/93524949/612a3697-bcc9-4602-912e-7af501f2afea)
 
-# HELLO! This is jCatalogueViewer
 
-Work in porgress! But I will write instructions on how to set it up soon :)
