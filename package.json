@@ -6,8 +6,11 @@
   "scripts": {
     "start": "electron ."
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+        "name": "Alex Pinel",
+        "email": ""
+    },
+  "license": "GPL-3.0-only",
   "devDependencies": {
     "electron": "^28.1.1",
     "tailwindcss": "^3.4.1"
