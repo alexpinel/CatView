@@ -8,4 +8,5 @@ The application can be downloaded from the releases page in this repository or c
 
 This application was built using electron-js, it uses the catalogue developed by Julio Hernandez Camero and combines it with flare and dimming data obtained from [Solar Demon](https://www.sidc.be/solardemon/) and SHARP active region videos.
 
+https://github.com/alexpinel/CatView/assets/93524949/609f18d9-17a6-46f2-9402-6c801de284ce
 
